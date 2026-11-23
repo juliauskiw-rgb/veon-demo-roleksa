@@ -1,0 +1,88 @@
+/* Hallmark · shape: top-heavy ledger · genre: modern-minimal · theme: custom · job: book · idea: "Консиліум: сайт говорить точно, як лікарський план" · vibe: "точний, спокійний, клінічний, людський"
+ * paper: #F3F3F5 · accent: #CBA764 · display: Commissioner · body: Golos Text · hero: H1 на 9 колонок, дія й адреса, панорамна смуга фото консиліуму · nav: світла липка шапка з номером і кнопкою · footer: світлий у два ряди з ФОП · imagery: client photos · signature: засновники з власними підписами
+ * axes: light/grotesk-sans/warm · posture: committed · contrast: pass · fold: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S4 R4 V4 · weakest: E (expression), answered with display-size prices on graphite fields and the founders' own signatures instead of decoration */
+/* Hallmark · waive 44c · design/review/hallmark-check.md: at 1440x900 H1, lead, call/Viber/Telegram, address and hours end above the fold; only the panoramic konsylium strip (aspect 1360/400) continues to 1040 px · concept.md §8.1/§8.5: the strip deliberately breaks the fold to invite scrolling into «Перший візит» */
+/* Hallmark · answer WARN 41 · accent-ink (#76591F) is never set on the brass fill: brass carries #1D1C21 text (7.5:1); accent-ink is used only on paper (5.9:1), per concept.md §8.2 */
+/* Hallmark · answer WARN 49 · .btn sets white-space: nowrap globally (global.css); the call label fits 280 px at 320 */
+/* Hallmark · answer F3 · .h2 (global.css) and h1/h2/h3 (base) carry text-wrap: balance; .prices__head h2 inherits it */
+/* Line 1 of this file is the Hallmark stamp (docs/process/hallmark.md), filled from design/concept.md §8.12. */
+
+/* Self-hosted fonts (OFL): Commissioner variable (wght + FLAR), Golos Text 400/600; cyrillic + latin subsets only. */
+@font-face { font-family: "Commissioner"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("/fonts/commissioner-cyrillic-flar-normal.woff2") format("woff2-variations"), url("/fonts/commissioner-cyrillic-flar-normal.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: "Commissioner"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("/fonts/commissioner-latin-flar-normal.woff2") format("woff2-variations"), url("/fonts/commissioner-latin-flar-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Golos Text"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/golos-text-cyrillic-400-normal.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: "Golos Text"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/golos-text-latin-400-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Golos Text"; font-style: normal; font-weight: 600; font-display: swap; src: url("/fonts/golos-text-cyrillic-600-normal.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: "Golos Text"; font-style: normal; font-weight: 600; font-display: swap; src: url("/fonts/golos-text-latin-600-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+/* Metric-matched fallbacks keep the swap from shifting the layout. */
+@font-face { font-family: "Commissioner Fallback"; src: local("Arial"); size-adjust: 106%; ascent-override: 90%; descent-override: 22%; line-gap-override: 0%; }
+@font-face { font-family: "Golos Text Fallback"; src: local("Arial"); size-adjust: 102%; ascent-override: 92%; descent-override: 24%; line-gap-override: 0%; }
+
+/* Client design tokens, only from design/concept.md (§8.2 palette, §8.3 type, §8.4 grid, §8.7 motion). */
+:root {
+  /* palette */
+  --color-bg: #F3F3F5;          /* paper */
+  --color-surface: #E7E6EA;     /* paper-2: complex-cases, team, footer */
+  --color-field: #4F4E55;       /* graphite field: first-visit, contacts */
+  --color-on-field: #F3F3F5;    /* 7.4:1 on field */
+  --color-on-field-muted: #D2D1D7; /* secondary text on field, 5.2:1 */
+  --color-text: #1D1C21;        /* 15.3:1 on bg */
+  --color-text-muted: #5A5960;  /* 6.3:1 on bg, 5.6:1 on surface */
+  --color-accent: #CBA764;      /* brass: primary fill, marks on graphite */
+  --color-accent-strong: #B8944F; /* hover step of the primary fill (text #1D1C21 keeps 6:1) */
+  --color-on-accent: #1D1C21;
+  --color-accent-on-field: #DDC587; /* brass for small text on graphite (4.86:1) */
+  --color-accent-ink: #76591F;  /* links, active nav, focus ring on light */
+  --color-rule: #A9A8AF;        /* decorative rules */
+  --color-rule-field: #6E6D75;  /* rules on the graphite field */
+  --color-focus: var(--color-accent-ink);
+
+  /* type */
+  --font-display: "Commissioner", "Commissioner Fallback", system-ui, sans-serif;
+  --font-body: "Golos Text", "Golos Text Fallback", system-ui, sans-serif;
+  --display-settings: "FLAR" 100, "VOLM" 0;
+  --fs-h1: clamp(2.5rem, 1.479rem + 4.19vw, 5.25rem);      /* 40 → 84 */
+  --fs-h2: clamp(2rem, 1.536rem + 1.905vw, 3.25rem);       /* 32 → 52 */
+  --fs-num: clamp(3.5rem, 2.571rem + 3.81vw, 6rem);        /* 56 → 96 */
+  --fs-h3: clamp(1.25rem, 1.157rem + 0.381vw, 1.5rem);     /* 20 → 24 */
+  --fs-body: clamp(1rem, 0.954rem + 0.19vw, 1.125rem);     /* 16 → 18 */
+  --fs-small: clamp(0.875rem, 0.852rem + 0.095vw, 0.9375rem); /* 14 → 15 */
+  --lh-h1: 1.02;
+  --lh-h2: 1.08;
+  --lh-body: 1.6;
+  --lh-small: 1.45;
+  --track-display: -0.02em;
+
+  /* grid and rhythm: 8 · 16 · 24 · 40 · 64 · 96 · 144 */
+  --s-1: 0.5rem;
+  --s-2: 1rem;
+  --s-3: 1.5rem;
+  --s-4: 2.5rem;
+  --s-5: 4rem;
+  --s-6: 6rem;
+  --s-7: 9rem;
+  --gap: 1.5rem;
+  --space: clamp(1.25rem, 0.229rem + 4.19vw, 4rem);         /* page gutter 20 → 64 */
+  --container: 1360px;
+  --section-y: clamp(4rem, 2.6rem + 5.7vw, 7.5rem);
+  --header-h: 56px;
+  --bar-h: 64px;
+  --radius: 6px;
+  --hit: 44px;
+
+  /* motion */
+  --ease-out: cubic-bezier(.2, .7, .2, 1);
+  --dur-micro: 120ms;
+  --dur-ui: 220ms;
+  --dur-ui-out: 160ms;
+  --dur: 420ms;
+  --dur-photo: 700ms;
+  --reveal-shift: 0px;
+}
+@media (min-width: 768px) {
+  :root { --reveal-shift: 12px; }
+}
+@media (min-width: 1120px) {
+  :root { --header-h: 72px; }
+}

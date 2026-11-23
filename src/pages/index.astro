@@ -1,0 +1,418 @@
+---
+import { getImage } from "astro:assets";
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import Section from "../components/Section.astro";
+import Actions from "../components/Actions.astro";
+import FutureLink from "../components/FutureLink.astro";
+import CallBar from "../components/CallBar.astro";
+import Footer from "../components/Footer.astro";
+import Icon from "../components/Icon.astro";
+import { Picture, Image } from "astro:assets";
+import { contacts, firstVisit, directions, implants, rating, prices, FUTURE } from "../data/clinic";
+import roksana from "../assets/roksana-main11.png";
+import oleksa from "../assets/oleksa12.png";
+import roksSign from "../assets/roks-pidpys.png";
+import oleksaSign from "../assets/oleksa-pidpys.png";
+import konsylium from "../assets/konsylium.jpg";
+import konsyliumPortrait from "../assets/konsylium-portrait.jpg";
+
+const title = "Стоматологія у Львові для складних випадків — ROLEKSA";
+const description = "Імплантація Straumann Group, All-on-4/6, лікування під наглядом анестезіолога. 12 лікарів вузьких спеціальностей. Під Голоском, 24В, 067 774 01 77.";
+
+// Hero photo: panorama on wide screens, a separate 4:5 crop on the founders for phones.
+const wideW = [640, 960, 1360, 1920];
+const tallW = [390, 600, 780];
+const [wideAvif, wideWebp, wideJpg, tallAvif, tallWebp] = await Promise.all([
+  getImage({ src: konsylium, widths: wideW, format: "avif" }),
+  getImage({ src: konsylium, widths: wideW, format: "webp" }),
+  getImage({ src: konsylium, width: 1360, format: "jpg" }),
+  getImage({ src: konsyliumPortrait, widths: tallW, format: "avif" }),
+  getImage({ src: konsyliumPortrait, widths: tallW, format: "webp" }),
+]);
+const wideSizes = "(min-width: 1424px) 1360px, calc(100vw - 2 * clamp(1.25rem, 0.229rem + 4.19vw, 4rem))";
+const tallSizes = "calc(100vw - 2.5rem)";
+const half = Math.ceil(prices.length / 2);
+const priceCols = [prices.slice(0, half), prices.slice(half)];
+// C-005: founders, specialisation, 17 years each. Signatures are the client's own files.
+const founders = [
+  { name: "Роксана Томищ", role: "Засновниця клініки", field: "Пародонтологія", photo: roksana, sign: roksSign, signW: 160, signH: 102, alt: "Роксана Томищ у формі клініки ROLEKSA" },
+  { name: "Олекса Томищ", role: "Засновник клініки", field: "Хірургія, ортопедія, імплантологія", photo: oleksa, sign: oleksaSign, signW: 220, signH: 97, alt: "Олекса Томищ у формі клініки ROLEKSA" },
+];
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Dentist",
+  name: "ROLEKSA",
+  description,
+  telephone: "+380677740177",
+  email: contacts.email,
+  address: { "@type": "PostalAddress", streetAddress: "вул. Під Голоском, 24В", addressLocality: "Львів", addressCountry: "UA" },
+  geo: { "@type": "GeoCoordinates", latitude: 49.8708373, longitude: 24.0057625 },
+  openingHours: "Mo-Sa 09:00-20:00",
+  hasMap: contacts.map,
+};
+---
+<Base lang="uk" title={title} description={description} ogImage={wideJpg.src}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <Header slot="header" />
+
+  <Section id="hero" class="hero">
+    <div class="container hero__grid">
+      <h1 class="hero__h1 display">Стоматологія для найскладніших випадків у Львові</h1>
+      <p class="hero__lead">12 лікарів вузьких спеціальностей працюють командою: імплантація, All-on-4/6, лікування під наглядом анестезіолога.</p>
+      <div class="hero__act" data-hero-cta data-rec="R-UX-01,R-UX-03">
+        <Actions />
+      </div>
+      <p class="hero__where small" data-rec="R-UX-03">
+        <span>{contacts.city}, {contacts.street}</span>
+        <span>{contacts.hoursDays} {contacts.hoursTime}</span>
+      </p>
+    </div>
+    <figure class="container hero__fig">
+      <picture class="hero__pic">
+        <source media="(max-width: 599px)" type="image/avif" srcset={tallAvif.srcSet.attribute} sizes={tallSizes} />
+        <source media="(max-width: 599px)" type="image/webp" srcset={tallWebp.srcSet.attribute} sizes={tallSizes} />
+        <source type="image/avif" srcset={wideAvif.srcSet.attribute} sizes={wideSizes} />
+        <source type="image/webp" srcset={wideWebp.srcSet.attribute} sizes={wideSizes} />
+        <img src={wideJpg.src} width="1920" height="1280" alt="Команда ROLEKSA у формі клініки біля екрана зі знімками зубів" fetchpriority="high" decoding="async" />
+      </picture>
+      <figcaption class="small muted">Консиліум: лікарі ROLEKSA разом розбирають знімки пацієнта.</figcaption>
+    </figure>
+  </Section>
+
+  <Section id="first-visit" class="field fv" rec="R-UX-06">
+    <div class="container fv__grid">
+      <div class="fv__head">
+        <h2 class="h2" data-reveal>Перший візит: що входить у консультацію</h2>
+        <p class="fv__price num" data-reveal style="--reveal-delay:60ms">{firstVisit.price}<span class="cur"> грн</span></p>
+        <p class="muted fv__note">Ціна консультації з прайсу клініки. Ось що лікар робить за цей час.</p>
+      </div>
+      <ol class="fv__list">
+        {firstVisit.steps.map((step, i) => (
+          <li class="fv__item"><span class="fv__n" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span><span class="h3">{step}</span></li>
+        ))}
+      </ol>
+      <ol class="fv__final" start="5">
+        <li class="fv__item fv__item--last">
+          <span class="fv__n" aria-hidden="true">05</span>
+          <span class="fv__plan display">{firstVisit.last}</span>
+          <Actions class="fv__cta" label="Записатися на огляд" />
+        </li>
+      </ol>
+    </div>
+  </Section>
+
+  <Section id="directions" class="dirs" rec="R-UX-06,R-UX-07">
+    <div class="container">
+      <h2 class="h2 dirs__h" data-reveal>Шість напрямів лікування в одній клініці на Під Голоском</h2>
+      <ul class="dirs__list">
+        {directions.map((d) => (
+          <li class:list={["dir", d.accent && "dir--accent"]}>
+            <details class="dir__d" data-dir open>
+              <summary class="dir__sum">
+                <h3 class="dir__name">{d.name}</h3>
+                <Icon name="chevron" class="dir__chev" />
+              </summary>
+              <div class="dir__body">
+                {d.note && <p class="dir__note">{d.note}</p>}
+                {d.services.length > 0 && (
+                  <ul class="dir__svc">
+                    {d.services.map((svc) => <li><FutureLink note={FUTURE}>{svc}</FutureLink></li>)}
+                  </ul>
+                )}
+              </div>
+            </details>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </Section>
+
+  <Section id="complex-cases" class="surface cc" rec="R-UX-06,G-R002">
+    <div class="container cc__grid">
+      <div class="cc__head">
+        <h2 class="h2" data-reveal>Імплантація на системах Straumann Group</h2>
+        <p class="cc__turnkey">
+          <span class="cc__label">Під ключ: імплант, абатмент і коронка</span>
+          <span class="num" data-reveal style="--reveal-delay:60ms">від {implants.turnkey}<span class="cur"> грн</span></span>
+        </p>
+        <p class="cc__warranty h3">Довічна гарантія виробника на імплантати</p>
+      </div>
+      <div class="cc__side">
+        <table class="cc__table">
+          <caption class="cc__cap">Хірургічний етап, ціна за один імплант</caption>
+          <thead><tr><th scope="col">Система</th><th scope="col">Ціна</th></tr></thead>
+          <tbody>
+            {implants.systems.map((sys) => <tr><th scope="row">{sys.name}</th><td>від {sys.price} грн</td></tr>)}
+          </tbody>
+        </table>
+        <p class="cc__tech small muted">{implants.tech}</p>
+        <ul class="cc__more">
+          <li><FutureLink note={FUTURE}>Складна імплантація</FutureLink></li>
+          <li><FutureLink note={FUTURE}>All-on-4 та All-on-6</FutureLink></li>
+        </ul>
+        <p class="cc__ask">Обговорити свій випадок: <a class="link" href={contacts.tel}>{contacts.phoneDisplay}</a></p>
+      </div>
+    </div>
+  </Section>
+
+  <Section id="team" class="surface team">
+    <div class="container">
+      <h2 class="h2 team__h" data-reveal>Роксана й Олекса Томищ, лікарі-засновники клініки</h2>
+      <ul class="team__list">
+        {founders.map((f) => (
+          <li class="person">
+            <Picture src={f.photo} formats={["avif", "webp"]} widths={[360, 540, 720]} sizes="(min-width: 960px) 30vw, 70vw" alt={f.alt} class="person__img" loading="lazy" />
+            <div class="person__text">
+              <h3 class="person__name">{f.name}</h3>
+              <p class="muted">{f.role}</p>
+              <p class="person__fact">{f.field}. Досвід 17 років.</p>
+              <Image src={f.sign} alt={`Підпис: ${f.name}`} width={f.signW} height={f.signH} densities={[1, 2]} format="webp" class="person__sign" loading="lazy" />
+            </div>
+          </li>
+        ))}
+      </ul>
+      <div class="team__crew">
+        <p>У команді 12 лікарів: 9 стоматологів, 2 лікарі-гігієністи та анестезіолог. З ними працює медсестра-анестезист.</p>
+        <FutureLink note={FUTURE}>Уся команда</FutureLink>
+      </div>
+    </div>
+  </Section>
+
+  <Section id="trust" class="trust">
+    <div class="container trust__row">
+      <h2 class="trust__h">
+        <span class="num" data-reveal>{rating.value}</span>
+        <span class="trust__txt h3">рейтинг на top20.ua за {rating.reviews} відгуками пацієнтів</span>
+      </h2>
+      <p class="trust__src small muted">Джерело: картка Roleksa dental на top20.ua. Останній відгук {rating.last}, перевірено {rating.checked}.</p>
+      <p class="trust__stories"><FutureLink note={FUTURE}>12 історій пацієнтів</FutureLink></p>
+    </div>
+  </Section>
+
+  <Section id="prices" class="prices" rec="R-UX-04">
+    <div class="container">
+      <div class="prices__head">
+        <h2 class="h2" data-reveal>Ціни на 12 основних послуг</h2>
+        <p class="small muted">За прайсом клініки, перевірено {rating.checked}.</p>
+      </div>
+      <div class="prices__cols">
+        {priceCols.map((col) => (
+          <dl class="prices__list">
+            {col.map((p) => (
+              <div class="prices__row"><dt>{p.name}</dt><dd>{p.price}</dd></div>
+            ))}
+          </dl>
+        ))}
+      </div>
+      <div class="prices__act">
+        <a class="btn btn--primary" href={contacts.tel}><Icon name="phone" />Записатися на консультацію</a>
+        <FutureLink note={FUTURE}>Повний прайс</FutureLink>
+      </div>
+    </div>
+  </Section>
+
+  <Section id="contacts" class="field ct" rec="R-UX-01">
+    <div class="container ct__grid">
+      <div class="ct__main">
+        <h2 class="h2" data-reveal>Запис на консультацію телефоном або в месенджері</h2>
+        <a class="ct__phone num" href={contacts.tel}>{contacts.phoneDisplay}</a>
+        <div class="ct__ch">
+          <a class="btn btn--secondary" href={contacts.viber}>Viber</a>
+          <a class="btn btn--secondary" href={contacts.telegram} target="_blank" rel="noopener">Telegram</a>
+          <a class="link ct__mail" href={contacts.mailto}>{contacts.email}</a>
+        </div>
+      </div>
+      <div class="ct__where">
+        <p class="h3">{contacts.city},<br />{contacts.street}</p>
+        <p class="muted">{contacts.hoursDays} {contacts.hoursTime}</p>
+        <a class="btn btn--primary ct__route" href={contacts.map} target="_blank" rel="noopener">Маршрут у Google Maps</a>
+      </div>
+    </div>
+  </Section>
+
+  <Footer slot="footer" />
+  <CallBar slot="footer" />
+</Base>
+
+<style>
+  .hero { padding-block: var(--s-4) 0; }
+  .hero__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-3); }
+  .hero__h1 { font-size: var(--fs-h1); line-height: var(--lh-h1); max-width: 18ch; }
+  .hero__lead { max-width: 40ch; }
+  @media (max-width: 359px) { .hero__h1 { font-size: 2.125rem; } }
+  .hero__where { display: grid; gap: 4px; color: var(--color-text-muted); }
+  .hero__fig { margin-top: var(--s-4); margin-bottom: 0; }
+  .hero__pic { display: block; overflow: hidden; border-radius: var(--radius); background: var(--color-surface); aspect-ratio: 4 / 5; }
+  .hero__pic img { width: 100%; height: 100%; object-fit: cover; object-position: 30% 20%; }
+  .hero__fig figcaption { margin-top: var(--s-1); max-width: 60ch; }
+  :global(.js) .hero__pic img { animation: photo-open 500ms var(--ease-out) 120ms both; }
+  @keyframes photo-open { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+
+  @media (min-width: 600px) {
+    .hero__pic { aspect-ratio: 16 / 7; }
+    .hero__pic img { object-position: 50% 38%; }
+  }
+  @media (min-width: 960px) {
+    .hero { padding-block: var(--s-4) 0; }
+    .hero__grid { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); row-gap: var(--s-4); align-items: end; }
+    .hero__h1 { grid-column: 1 / span 9; grid-row: 1; max-width: none; }
+    .hero__where { grid-column: 9 / -1; grid-row: 3; align-self: end; justify-self: end; text-align: right; }
+    .hero__lead { grid-column: 1 / span 6; grid-row: 2; }
+    .hero__act { grid-column: 1 / span 8; grid-row: 3; margin-top: calc(-1 * var(--s-2)); }
+    .hero__fig { margin-top: var(--s-4); }
+    .hero__pic { aspect-ratio: 1360 / 400; }
+    :global(.js) .hero__pic img { animation-duration: var(--dur-photo); }
+  }
+  /* first-visit: dense graphite field */
+  .fv { padding-block: var(--section-y); margin-top: var(--s-6); }
+  .fv__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-4); }
+  .fv__head { display: grid; gap: var(--s-3); align-content: start; }
+  .fv__price { color: var(--color-on-field); }
+  .cur { font-size: .42em; letter-spacing: 0; }
+  .fv__note { max-width: 34ch; }
+  .fv__item { display: grid; grid-template-columns: 2.5rem minmax(0, 1fr); align-items: baseline; gap: var(--s-2); padding-block: var(--s-3); border-top: 1px solid var(--color-rule-field); }
+  .fv__n { font-size: var(--fs-small); color: var(--color-accent-on-field); font-variant-numeric: tabular-nums; }
+  .fv__final .fv__item { border-top: 1px solid var(--color-accent); }
+  .fv__plan { font-size: var(--fs-h2); line-height: var(--lh-h2); }
+  :global(.fv__cta) { grid-column: 1 / -1; margin-top: var(--s-2); }
+  .fv__item--last { align-items: center; }
+  @media (min-width: 960px) {
+    .fv__grid { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); row-gap: 0; align-items: start; }
+    .fv__head { grid-column: 1 / span 5; grid-row: 1 / span 2; }
+    .fv__list { grid-column: 7 / -1; }
+    .fv__final { grid-column: 7 / -1; }
+    .fv__plan { font-size: var(--fs-h3); line-height: 1.25; }
+    :global(.fv__cta) { margin-top: var(--s-1); }
+    .fv__item--last { grid-template-columns: 2.5rem minmax(0, 1fr); }
+  }
+
+  /* directions: typographic index */
+  .dirs { padding-block: var(--section-y); }
+  .dirs__h { max-width: 22ch; margin-bottom: var(--s-5); }
+  .dir { border-top: 1px solid var(--color-rule); }
+  .dir:last-child { border-bottom: 1px solid var(--color-rule); }
+  .dir__sum { list-style: none; display: flex; align-items: center; justify-content: space-between; gap: var(--s-2); min-height: 64px; padding-block: var(--s-2); cursor: pointer; }
+  .dir__sum::-webkit-details-marker { display: none; }
+  .dir__name { font-family: var(--font-display); font-weight: 600; font-variation-settings: var(--display-settings); letter-spacing: var(--track-display); font-size: var(--fs-h3); line-height: 1.25; }
+  .dir--accent .dir__name { display: flex; align-items: baseline; gap: var(--s-2); }
+  .dir--accent .dir__name::before { content: ""; flex: none; width: 10px; height: 10px; background: var(--color-accent); }
+  .dir__chev { flex: none; width: 24px; height: 24px; transition: transform var(--dur-ui) var(--ease-out); }
+  .dir__d[open] .dir__chev { transform: rotate(180deg); }
+  .dir__body { padding-bottom: var(--s-3); }
+  .dir__d[open] .dir__body { animation: dir-in var(--dur-ui) var(--ease-out); }
+  @keyframes dir-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .dir__note { max-width: 46ch; }
+  .dir--accent .dir__note { font-weight: 600; }
+  .dir__svc { display: flex; flex-wrap: wrap; column-gap: var(--s-3); }
+  .dir__svc .future-link { color: var(--color-text-muted); }
+  .dir__svc .future-link:hover, .dir__svc .future-link:focus-visible { color: var(--color-text); }
+  @media (min-width: 768px) {
+    .dir__d { position: relative; min-height: 5rem; padding-block: var(--s-3); padding-left: calc((100% + var(--gap)) * 5 / 12); }
+    .dir__sum { position: absolute; left: 0; top: var(--s-3); width: calc((100% + var(--gap)) * 5 / 12 - 2 * var(--gap)); min-height: 0; padding: 0; cursor: default; }
+    .dir__chev { display: none; }
+    .dir__body { padding: 0; }
+    .dir__d:has(.dir__svc) .dir__sum { top: calc(var(--s-3) + 6px); }
+    .dir__d[open] .dir__body { animation: none; }
+  }
+
+  /* complex-cases: tabular, second-level background */
+  .cc { padding-block: var(--section-y) var(--s-6); }
+  .cc__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-5); }
+  .cc__head { display: grid; gap: var(--s-3); align-content: start; }
+  .cc__turnkey { display: grid; gap: var(--s-1); margin-top: var(--s-2); }
+  .cc__label { color: var(--color-text-muted); }
+  .cc__warranty { display: flex; align-items: baseline; gap: var(--s-2); }
+  .cc__warranty::before { content: ""; flex: none; width: 10px; height: 10px; background: var(--color-accent); }
+  .cc__table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  .cc__cap { text-align: left; caption-side: top; padding-bottom: var(--s-2); color: var(--color-text-muted); font-size: var(--fs-small); }
+  .cc__table thead th { font-size: var(--fs-small); font-weight: 400; color: var(--color-text-muted); text-align: left; padding-bottom: var(--s-1); }
+  .cc__table thead th:last-child, .cc__table td { text-align: right; }
+  .cc__table tbody th, .cc__table td { padding-block: var(--s-3); border-top: 1px solid var(--color-rule); font-size: var(--fs-h3); line-height: 1.25; }
+  .cc__table tbody th { text-align: left; font-weight: 400; padding-right: var(--s-2); }
+  .cc__table td { font-weight: 600; white-space: nowrap; }
+  .cc__table tbody tr:last-child > * { border-bottom: 1px solid var(--color-rule); }
+  .cc__tech { margin-top: var(--s-3); max-width: 60ch; }
+  .cc__more { display: flex; flex-wrap: wrap; column-gap: var(--s-3); margin-top: var(--s-2); }
+  .cc__ask { margin-top: var(--s-1); }
+  .cc__ask .link { font-weight: 600; white-space: nowrap; display: inline-flex; align-items: center; min-height: var(--hit); }
+  @media (min-width: 960px) {
+    .cc__grid { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); }
+    .cc__head { grid-column: 1 / span 6; }
+    .cc__side { grid-column: 8 / -1; padding-top: var(--s-2); }
+  }
+
+  /* team: founders with their own signatures */
+  .team { padding-block: 0 var(--section-y); }
+  .team > .container { border-top: 1px solid var(--color-rule); padding-top: var(--s-6); }
+  .team__h { max-width: 20ch; margin-bottom: var(--s-5); }
+  .team__list { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-5); }
+  .person { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-3); }
+  .person__img { width: min(100%, 380px); height: auto; aspect-ratio: 720 / 878; }
+  .person__text { display: grid; gap: var(--s-1); align-content: start; }
+  .person__name { font-family: var(--font-display); font-weight: 600; font-variation-settings: var(--display-settings); letter-spacing: var(--track-display); font-size: var(--fs-h3); line-height: 1.25; }
+  .person__fact { font-weight: 600; }
+  .person__sign { width: auto; height: 72px; margin-top: var(--s-2); }
+  .team__crew { margin-top: var(--s-5); display: grid; gap: var(--s-1); max-width: 56ch; }
+  @media (min-width: 768px) {
+    .team__list { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); }
+    .person:nth-child(1) { grid-column: 1 / span 6; }
+    .person:nth-child(2) { grid-column: 7 / span 6; margin-top: var(--s-6); }
+  }
+  @media (min-width: 1200px) {
+    .person { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: end; column-gap: var(--gap); }
+    .person__text { padding-bottom: var(--s-4); }
+  }
+
+  /* trust: one strip between rules */
+  .trust { padding-block: var(--s-5); }
+  .trust__row { display: grid; gap: var(--s-2); padding-block: var(--s-4); border-block: 1px solid var(--color-rule); }
+  .trust__h { display: flex; align-items: baseline; flex-wrap: wrap; column-gap: var(--s-3); row-gap: var(--s-1); font-weight: 400; }
+  .trust__txt { max-width: 26ch; }
+  @media (min-width: 960px) {
+    .trust__row { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); align-items: end; }
+    .trust__h { grid-column: 1 / span 7; }
+    .trust__src { grid-column: 8 / span 3; }
+    .trust__stories { grid-column: 11 / -1; justify-self: end; }
+  }
+
+  /* prices: ledger in two columns */
+  .prices { padding-block: var(--s-5) var(--section-y); }
+  .prices__head { display: grid; gap: var(--s-2); margin-bottom: var(--s-4); }
+  .prices__cols { display: grid; grid-template-columns: minmax(0, 1fr); column-gap: var(--s-5); }
+  .prices__list { margin: 0; }
+  .prices__row { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s-2); padding-block: var(--s-2); border-top: 1px solid var(--color-rule); }
+  .prices__list:last-child .prices__row:last-child { border-bottom: 1px solid var(--color-rule); }
+  .prices__row dt { min-width: 0; }
+  .prices__row dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; text-align: right; }
+  .prices__act { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3); margin-top: var(--s-4); }
+  @media (max-width: 599px) { .prices__act .btn { width: 100%; } }
+  @media (min-width: 768px) {
+    .prices__cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .prices__list .prices__row:last-child { border-bottom: 1px solid var(--color-rule); }
+  }
+  @media (min-width: 960px) {
+    .prices__head { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); align-items: end; }
+    .prices__head h2 { grid-column: 1 / span 7; }
+    .prices__head p { grid-column: 9 / -1; justify-self: end; text-align: right; }
+  }
+
+  /* contacts: graphite finale */
+  .ct { padding-block: var(--section-y); }
+  .ct__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-5); }
+  .ct__main { display: grid; gap: var(--s-3); align-content: start; }
+  .ct__main h2 { max-width: 20ch; }
+  .ct__phone { color: var(--color-on-field); text-decoration: none; white-space: nowrap; width: max-content; max-width: 100%; transition: color var(--dur-micro) var(--ease-out); }
+  .ct__phone:hover { color: var(--color-accent-on-field); }
+  .ct__ch { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2); }
+  .ct__ch .btn { min-width: 128px; }
+  .ct__mail { display: inline-flex; align-items: center; min-height: var(--hit); overflow-wrap: anywhere; }
+  .ct__where { display: grid; gap: var(--s-1); align-content: start; }
+  .ct__route { margin-top: var(--s-3); justify-self: start; }
+  @media (max-width: 380px) { .ct__phone { font-size: 2.75rem; } }
+  @media (min-width: 960px) {
+    .ct__grid { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); }
+    .ct__main { grid-column: 1 / span 8; }
+    .ct__where { grid-column: 9 / -1; padding-left: var(--s-4); border-left: 1px solid var(--color-rule-field); }
+  }
+</style>

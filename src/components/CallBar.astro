@@ -1,0 +1,21 @@
+---
+// Sticky action bar for phones (R-UX-02): call (wider, brass), Viber, Telegram. Shown by src/scripts/site.ts.
+import Icon from "./Icon.astro";
+import { contacts } from "../data/clinic";
+---
+<div class="cbar" data-callbar data-rec="R-UX-02,R-UX-01,G-R001">
+  <a class="btn btn--primary cbar__call" href={contacts.tel}><Icon name="phone" />Подзвонити</a>
+  <a class="btn btn--secondary" href={contacts.viber}>Viber</a>
+  <a class="btn btn--secondary" href={contacts.telegram} target="_blank" rel="noopener">Telegram</a>
+</div>
+<style>
+  .cbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: var(--s-1); padding: 8px var(--space) calc(8px + env(safe-area-inset-bottom)); background: var(--color-bg); border-top: 1px solid var(--color-rule); transition: transform var(--dur-ui-out) var(--ease-out); }
+  .cbar .btn { min-height: 48px; padding-inline: var(--s-1); font-size: var(--fs-small); }
+  :global(.js) .cbar.is-ready { transform: translateY(100%); }
+  :global(.js) .cbar.is-ready.is-shown { transform: translateY(0); transition-duration: var(--dur-ui); }
+  :global(body) { padding-bottom: calc(var(--bar-h) + env(safe-area-inset-bottom)); }
+  @media (min-width: 768px) {
+    .cbar { display: none; }
+    :global(body) { padding-bottom: 0; }
+  }
+</style>

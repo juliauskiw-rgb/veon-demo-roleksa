@@ -1,0 +1,52 @@
+---
+import { Image } from "astro:assets";
+import logo from "../assets/logo-roleksa-stacked.png";
+import FutureLink from "./FutureLink.astro";
+import { contacts, legal, FUTURE } from "../data/clinic";
+const year = new Date().getFullYear();
+---
+<footer class="ftr">
+  <div class="container ftr__top">
+    <a class="ftr__logo" href="#top" aria-label="ROLEKSA, клініка стоматології: на початок сторінки">
+      <Image src={logo} alt="" width={112} height={83} densities={[1, 2]} format="webp" quality={90} />
+    </a>
+    <address class="ftr__contacts">
+      <a class="link" href={contacts.tel}>{contacts.phoneFull}</a>
+      <a class="link" href={contacts.mailto}>{contacts.email}</a>
+      <span>{contacts.city}, {contacts.street}</span>
+      <span>{contacts.hoursDays} {contacts.hoursTime}</span>
+    </address>
+    <ul class="ftr__ch">
+      <li><a class="link" href={contacts.viber}>Viber</a></li>
+      <li><a class="link" href={contacts.telegram} target="_blank" rel="noopener">Telegram</a></li>
+      <li><a class="link" href={contacts.map} target="_blank" rel="noopener">Маршрут у Google Maps</a></li>
+    </ul>
+  </div>
+  <div class="container ftr__bottom small">
+    <p class="muted">© {year} ROLEKSA. Послуги надають {legal.join(" і ")}.</p>
+    <ul class="ftr__legal">
+      <li><FutureLink note={FUTURE}>Публічна оферта</FutureLink></li>
+      <li><FutureLink note={FUTURE}>Політика конфіденційності</FutureLink></li>
+      <li><FutureLink note={FUTURE}>Блог</FutureLink></li>
+    </ul>
+  </div>
+</footer>
+<style>
+  .ftr { background: var(--color-surface); padding-block: var(--s-5) var(--s-3); }
+  .ftr__top { display: grid; gap: var(--s-4); grid-template-columns: minmax(0, 1fr); padding-bottom: var(--s-4); border-bottom: 1px solid var(--color-rule); }
+  .ftr__logo { display: inline-block; width: max-content; }
+  .ftr__logo img { width: 112px; height: auto; }
+  .ftr__contacts { font-style: normal; display: grid; gap: var(--s-1); align-content: start; }
+  .ftr__contacts a, .ftr__ch a { display: inline-flex; align-items: center; min-height: var(--hit); width: max-content; max-width: 100%; }
+  .ftr__contacts span { color: var(--color-text-muted); }
+  .ftr__ch { display: grid; gap: 0; align-content: start; }
+  .ftr__bottom { display: grid; gap: var(--s-2); padding-top: var(--s-3); }
+  .ftr__legal { display: flex; flex-wrap: wrap; column-gap: var(--s-3); }
+  @media (min-width: 768px) {
+    .ftr__top { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); }
+    .ftr__logo { grid-column: 1 / span 4; }
+    .ftr__contacts { grid-column: 5 / span 4; gap: 0; }
+    .ftr__ch { grid-column: 9 / span 4; }
+    .ftr__bottom { grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+  }
+</style>

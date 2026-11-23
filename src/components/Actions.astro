@@ -1,0 +1,20 @@
+---
+// Booking cluster: one brass call button (primary), Viber and Telegram as outlines (second level).
+import Icon from "./Icon.astro";
+import { contacts } from "../data/clinic";
+interface Props { label?: string; class?: string; }
+const { label = `Подзвонити ${contacts.phoneDisplay}`, class: cls } = Astro.props;
+---
+<div class:list={["acts", cls]}>
+  <a class="btn btn--primary acts__call" href={contacts.tel}><Icon name="phone" />{label}</a>
+  <a class="btn btn--secondary" href={contacts.viber}>Viber</a>
+  <a class="btn btn--secondary" href={contacts.telegram} target="_blank" rel="noopener">Telegram</a>
+</div>
+<style>
+  .acts { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-1); }
+  .acts__call { grid-column: 1 / -1; padding-inline: var(--s-2); }
+  @media (min-width: 600px) {
+    .acts { display: flex; flex-wrap: wrap; gap: var(--s-2); align-items: center; }
+    .acts .btn--secondary { min-width: 128px; }
+  }
+</style>

@@ -1,0 +1,99 @@
+---
+import { Image } from "astro:assets";
+import logo from "../assets/logo-roleksa.png";
+import Icon from "./Icon.astro";
+import { contacts } from "../data/clinic";
+
+const nav = [
+  { href: "#first-visit", label: "Перший візит" },
+  { href: "#directions", label: "Послуги" },
+  { href: "#complex-cases", label: "Імплантація" },
+  { href: "#team", label: "Лікарі" },
+  { href: "#prices", label: "Ціни" },
+  { href: "#contacts", label: "Контакти" },
+];
+---
+<header class="hdr" data-header>
+  <div class="container hdr__in">
+    <a class="hdr__logo" href="#top" aria-label="ROLEKSA, клініка стоматології: на початок сторінки">
+      <Image src={logo} alt="" width={175} height={48} densities={[1, 2]} format="webp" quality={90} loading="eager" />
+    </a>
+
+    <nav class="hdr__nav" aria-label="Розділи сторінки">
+      <ul>
+        {nav.map((n) => <li><a href={n.href} data-nav>{n.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <div class="hdr__actions">
+      <a class="hdr__phone" href={contacts.tel} data-rec="R-UX-01">{contacts.phoneDisplay}</a>
+      <a class="btn btn--primary hdr__book" href="#contacts">Записатися</a>
+      <a class="hdr__icon hdr__call" href={contacts.tel} aria-label={`Подзвонити ${contacts.phoneDisplay}`} data-rec="R-UX-01,R-UX-03"><Icon name="phone" /></a>
+      <button class="hdr__icon hdr__burger" type="button" aria-expanded="false" aria-controls="mnav" data-burger>
+        <Icon name="menu" class="i-open" /><Icon name="close" class="i-close" />
+        <span class="visually-hidden">Меню</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="mnav" id="mnav" data-mnav hidden>
+    <nav class="container" aria-label="Меню">
+      <ul class="mnav__list">
+        {nav.map((n) => <li><a href={n.href} data-mnav-link>{n.label}</a></li>)}
+      </ul>
+      <div class="mnav__ch">
+        <a class="btn btn--primary" href={contacts.tel}>Подзвонити {contacts.phoneDisplay}</a>
+        <a class="btn btn--secondary" href={contacts.viber}>Viber</a>
+        <a class="btn btn--secondary" href={contacts.telegram} target="_blank" rel="noopener">Telegram</a>
+      </div>
+      <p class="mnav__addr small muted">{contacts.city}, {contacts.street}<br />{contacts.hoursDays} {contacts.hoursTime}</p>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .hdr { position: sticky; top: 0; z-index: 50; background: var(--color-bg); border-bottom: 1px solid transparent; transition: border-color var(--dur-ui) var(--ease-out); }
+  .hdr.is-scrolled { border-bottom-color: var(--color-rule); }
+  .hdr__in { height: var(--header-h); display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); }
+  .hdr__logo { display: block; flex: none; padding-block: 4px; border-radius: 2px; }
+  .hdr__logo img { width: 128px; height: auto; }
+  .hdr__nav { display: none; }
+  .hdr__nav ul { display: flex; gap: var(--s-3); }
+  .hdr__nav a { display: inline-flex; align-items: center; min-height: var(--hit); font-size: var(--fs-small); color: var(--color-text); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .35em; text-decoration-color: transparent; transition: color var(--dur-micro) var(--ease-out), text-decoration-color var(--dur-micro) var(--ease-out); }
+  .hdr__nav a:hover { text-decoration-color: currentColor; }
+  .hdr__nav a[aria-current="true"] { color: var(--color-accent-ink); text-decoration-color: currentColor; }
+  .hdr__actions { display: flex; align-items: center; gap: var(--s-1); }
+  .hdr__phone, .hdr__book { display: none; }
+  .hdr__phone { font-weight: 600; font-variant-numeric: tabular-nums; text-decoration: none; white-space: nowrap; min-height: var(--hit); align-items: center; padding-inline: var(--s-1); }
+  .hdr__phone:hover { color: var(--color-accent-ink); }
+  .hdr__book { min-height: 44px; padding-inline: var(--s-2); }
+  .hdr__icon { display: inline-grid; place-items: center; width: var(--hit); height: var(--hit); border-radius: var(--radius); color: var(--color-text); background: transparent; border: 1.5px solid var(--color-rule); cursor: pointer; transition: background-color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out); }
+  .hdr__icon:hover { border-color: var(--color-text); }
+  .hdr__icon svg { width: 22px; height: 22px; }
+  .hdr__call { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-on-accent); }
+  .hdr__call:hover { background: var(--color-accent-strong); border-color: var(--color-accent-strong); }
+  .hdr__burger .i-close { display: none; }
+  .hdr__burger[aria-expanded="true"] .i-open { display: none; }
+  .hdr__burger[aria-expanded="true"] .i-close { display: block; }
+
+  .mnav { position: fixed; inset: var(--header-h) 0 0 0; background: var(--color-bg); overflow-y: auto; border-top: 1px solid var(--color-rule); padding-block: var(--s-3) var(--s-5); }
+  .mnav[hidden] { display: none; }
+  .mnav__list a { display: flex; align-items: center; min-height: 52px; font-family: var(--font-display); font-weight: 600; font-variation-settings: var(--display-settings); font-size: 1.5rem; letter-spacing: var(--track-display); text-decoration: none; border-bottom: 1px solid var(--color-rule); }
+  .mnav__ch { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-1); margin-top: var(--s-4); }
+  .mnav__ch .btn--primary { grid-column: 1 / -1; }
+  .mnav__addr { margin-top: var(--s-3); }
+
+  @media (min-width: 560px) {
+    .hdr__logo img { width: 150px; }
+    .hdr__phone { display: inline-flex; }
+    .hdr__call { display: none; }
+  }
+  @media (min-width: 1120px) {
+    .hdr__logo img { width: 175px; }
+    .hdr__nav { display: block; }
+    .hdr__book { display: inline-flex; }
+    .hdr__burger { display: none; }
+    .mnav { display: none !important; }
+  }
+  @media (min-width: 1280px) { .hdr__nav ul { gap: var(--s-4); } }
+</style>
